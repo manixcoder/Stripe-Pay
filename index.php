@@ -1,53 +1,45 @@
 <?php
-// Include configuration file  
-require_once 'config.php';
+include "dbcon.php";
 ?>
-<div class="panel">
-    <div class="panel-heading">
-        <h3 class="panel-title">Charge <?php echo '$' . $itemPrice; ?> with Stripe</h3>
+<html>
 
-        <!-- Product Info -->
-        <p><b>Item Name:</b> <?php echo $itemName; ?></p>
-        <p><b>Price:</b> <?php echo '$' . $itemPrice . ' ' . $currency; ?></p>
-    </div>
-    <div class="panel-body">
-        <!-- Display status message -->
-        <div id="paymentResponse" class="hidden"></div>
+<head>
+    <title> Stripe Payment Gateway Integration in PHP </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link rel="stylesheet" type="text/css" href="css/design.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+</head>
 
-        <!-- Display a payment form -->
-        <form id="paymentFrm" class="hidden">
-            <div class="form-group">
-                <label>NAME</label>
-                <input type="text" id="name" class="field" placeholder="Enter name" required="" autofocus="">
+<body>
+
+    <div class="container">
+        <h2 style="text-align: center; color: blue;">Stripe Payment Gateway Integration in PHP </h2>
+
+        <?php 
+            $sql = "SELECT * FROM `products`";
+            $res = mysqli_query($con,$sql) or die("MySql Query Error".mysqli_error($con));
+            while($row=mysqli_fetch_assoc($res)){
+            ?>
+        <form method="post" action="stripe_form.php">
+            <div class="col-md-4 column productbox">
+                <input type="hidden" name="id" value="<?php echo $row['id'];?>" />
+                <img src="<?php echo $row['image'];?>" class="img-responsive">
+                <div class="producttitle"><?php echo $row['name'];?></div>
+                <div class="productprice">
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-primary btn-sm" name="submit" role="button">Buy
+                            Now</button>
+                    </div>
+                    <div class="pricetext">$<?php echo $row['price'];?></div>
+                </div>
             </div>
-            <div class="form-group">
-                <label>EMAIL</label>
-                <input type="email" id="email" class="field" placeholder="Enter email" required="">
-            </div>
-
-            <div id="paymentElement">
-                <!--Stripe.js injects the Payment Element-->
-            </div>
-
-            <!-- Form submit button -->
-            <button id="submitBtn" class="btn btn-success">
-                <div class="spinner hidden" id="spinner"></div>
-                <span id="buttonText">Pay Now</span>
-            </button>
         </form>
-
-        <!-- Display processing notification -->
-        <div id="frmProcess" class="hidden">
-            <span class="ring"></span> Processing...
-        </div>
-
-        <!-- Display re-initiate button -->
-        <div id="payReinit" class="hidden">
-            <button class="btn btn-primary" onClick="window.location.href=window.location.href.split('?')[0]"><i
-                    class="rload"></i>Re-initiate Payment</button>
-        </div>
+        <?php } ?>
     </div>
-</div>
 
-<script src="https://js.stripe.com/v3/"></script>
-<script src="js/checkout.js" STRIPE_PUBLISHABLE_KEY="<?php echo STRIPE_PUBLISHABLE_KEY; ?>" defer></script>
+</body>
+
+</html>

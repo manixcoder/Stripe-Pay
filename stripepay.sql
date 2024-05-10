@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `stripepay`
+-- Database: `stripe_rb`
 --
 
 -- --------------------------------------------------------
@@ -52,7 +52,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `name`, `email`, `card_number`, `card_exp_month`, `card_exp_year`, `item_name`, `item_number`, `item_price`, `item_price_currency`, `paid_amount`, `paid_amount_currency`, `txn_id`, `payment_status`, `created`, `modified`) VALUES
-(1, 'Tester Boy', 'rb24@gmail.com', 4242424242424242, '03', '23', 'Lighting Image 2', '', 1000.00, 'usd', '1000', 'usd', 'txn_1G0iYnHdLX4ZoZPG9axM80tY', 'succeeded', '2024-01-14 07:07:25', '2024-01-14 07:07:25');
+(1, 'Tester Boy', 'rb24@gmail.com', 4242424242424242, '03', '23', 'Lighting Image 2', '', 1000.00, 'usd', '1000', 'usd', 'txn_1G0iYnHdLX4ZoZPG9axM80tY', 'succeeded', '2020-01-14 07:07:25', '2020-01-14 07:07:25');
 
 -- --------------------------------------------------------
 
