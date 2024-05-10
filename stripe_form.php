@@ -1,16 +1,15 @@
-<?php
-/* coded by Manish Kumar Pathak ( https://github.com/manixcoder ) */
+<?php 
 include "dbcon.php";
-if (isset($_POST['submit'])) {
-    $productId = $_POST['id'];
-} else {
-    $productId = '';
-}
+    if(isset($_POST['submit'])){
+        $productId = $_POST['id'];
+    } else {
+        $productId = '';
+    }
 
-$SQL_getPr = "SELECT * FROM `products` WHERE `id`='$productId'";
-$res_getPr = mysqli_query($con, $SQL_getPr) or die("MySql Query Error" . mysqli_error($con));
-$row_getPr = mysqli_fetch_assoc($res_getPr);
-$price = $row_getPr['price'];
+    $SQL_getPr = "SELECT * FROM `products` WHERE `id`='$productId'";
+    $res_getPr = mysqli_query($con,$SQL_getPr) or die("MySql Query Error".mysqli_error($con));
+    $row_getPr = mysqli_fetch_assoc($res_getPr);
+    $price = $row_getPr['price'];
 ?>
 <html>
 
@@ -49,7 +48,7 @@ $price = $row_getPr['price'];
                         <form role="form" action="stripe_payment.php" method="POST" name="cardpayment"
                             id="payment-form">
 
-                            <input type="hidden" name="productId" value="<?php echo $productId; ?>" />
+                            <input type="hidden" name="productId" value="<?php echo $productId;?>" />
 
                             <div class="row">
                                 <div class="col-xs-12">
@@ -146,7 +145,7 @@ $price = $row_getPr['price'];
                             <div class="row">
                                 <div class="col-xs-12">
                                     <button class="subscribe btn btn-success btn-lg btn-block submit" type="submit"
-                                        id="payBtn">PAY NOW ( $<?php echo $price; ?> )</button>
+                                        id="payBtn">PAY NOW ( $<?php echo $price;?> )</button>
                                 </div>
                             </div>
                         </form>
