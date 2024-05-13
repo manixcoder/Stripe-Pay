@@ -63,7 +63,6 @@ if (!empty($_POST['stripeToken'])) {
 	$itemName = $row_getPr['name'];
 
 	// Charge a credit or a debit card 
-	//$charge = \Stripe\PaymentIntent::create(array(
 	$charge = \Stripe\Charge::create(array(
 		'customer' => $customer->id,
 		'amount'   => $itemPrice,
@@ -90,8 +89,8 @@ if (!empty($_POST['stripeToken'])) {
 
 		// Insert tansaction data into the database
 
-		$sql = "INSERT INTO `orders`(`name`,`email`,`card_number`,`card_exp_month`,`card_exp_year`,`item_name`,`item_number`,`item_price`,`item_price_currency`,`paid_amount`,`paid_amount_currency`,`txn_id`,`payment_status`,`created`,`modified`)VALUES ('$name','$email','$card_no','$card_exp_month','$card_exp_year','$itemName','','$itemPrice','$currency','$paidAmount','$paidCurrency','$transactionID','$payment_status','$dt_tm','$dt_tm')";
-		
+		$sql = "INSERT INTO `orders`(`name`,`email`,`card_number`,`card_exp_month`,`card_exp_year`,`item_name`,`item_number`,`item_price`,`item_price_currency`,`paid_amount`,`paid_amount_currency`,`txn_id`,`payment_status`,`created`,`modified`) 
+			VALUES ('$name','$email','$card_no','$card_exp_month','$card_exp_year','$itemName','','$itemPrice','$currency','$paidAmount','$paidCurrency','$transactionID','$payment_status','$dt_tm','$dt_tm')";
 		mysqli_query($con, $sql) or die("Mysql Error Stripe-Charge(SQL)" . mysqli_error($con));
 
 		//Get Last Id
@@ -121,35 +120,35 @@ if (!empty($_POST['stripeToken'])) {
 <html>
 
 <head>
-	<title> Stripe Payment Gateway Integration in PHP </title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="css/stripe.css">
+    <title> Stripe Payment Gateway Integration in PHP </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/stripe.css">
 </head>
 
 <div class="container">
-	<h2 style="text-align: center; color: blue;">Stripe Payment Gateway Integration in PHP </h2>
-	<h4 style="text-align: center;">This is - Stripe Payment Success URL </h4>
-	<br>
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="status">
-				<h1 class="<?php echo $ordStatus; ?>"><?php echo $statusMsg; ?></h1>
+    <h2 style="text-align: center; color: blue;">Stripe Payment Gateway Integration in PHP </h2>
+    <h4 style="text-align: center;">This is - Stripe Payment Success URL </h4>
+    <br>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="status">
+                <h1 class="<?php echo $ordStatus; ?>"><?php echo $statusMsg; ?></h1>
 
-				<h4 class="heading">Payment Information - </h4>
-				<br>
-				<p><b>Reference ID:</b> <strong><?php echo $id; ?></strong></p>
-				<p><b>Transaction ID:</b> <?php echo $transactionID; ?></p>
-				<p><b>Paid Amount:</b> <?php echo $paidAmount . ' ' . $paidCurrency; ?> ($<?php echo $price; ?>.00)</p>
-				<p><b>Payment Status:</b> <?php echo $payment_status; ?></p>
-				<h4 class="heading">Product Information - </h4>
-				<br>
-				<p><b>Name:</b> <?php echo $itemName; ?></p>
-				<p><b>Price:</b> <?php echo $itemPrice . ' ' . $currency; ?> ($<?php echo $price; ?>.00)</p>
-			</div>
-			<a href="index.php" class="btn-continue">Back to Home</a>
-		</div>
-	</div>
+                <h4 class="heading">Payment Information - </h4>
+                <br>
+                <p><b>Reference ID:</b> <strong><?php echo $id; ?></strong></p>
+                <p><b>Transaction ID:</b> <?php echo $transactionID; ?></p>
+                <p><b>Paid Amount:</b> <?php echo $paidAmount . ' ' . $paidCurrency; ?> ($<?php echo $price; ?>.00)</p>
+                <p><b>Payment Status:</b> <?php echo $payment_status; ?></p>
+                <h4 class="heading">Product Information - </h4>
+                <br>
+                <p><b>Name:</b> <?php echo $itemName; ?></p>
+                <p><b>Price:</b> <?php echo $itemPrice . ' ' . $currency; ?> ($<?php echo $price; ?>.00)</p>
+            </div>
+            <a href="index.php" class="btn-continue">Back to Home</a>
+        </div>
+    </div>
 </div>
 
 </html>
