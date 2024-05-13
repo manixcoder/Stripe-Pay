@@ -63,6 +63,7 @@ if (!empty($_POST['stripeToken'])) {
 	$itemName = $row_getPr['name'];
 
 	// Charge a credit or a debit card 
+	//$charge = \Stripe\PaymentIntent::create(array(
 	$charge = \Stripe\Charge::create(array(
 		'customer' => $customer->id,
 		'amount'   => $itemPrice,
@@ -89,8 +90,8 @@ if (!empty($_POST['stripeToken'])) {
 
 		// Insert tansaction data into the database
 
-		$sql = "INSERT INTO `orders`(`name`,`email`,`card_number`,`card_exp_month`,`card_exp_year`,`item_name`,`item_number`,`item_price`,`item_price_currency`,`paid_amount`,`paid_amount_currency`,`txn_id`,`payment_status`,`created`,`modified`) 
-			VALUES ('$name','$email','$card_no','$card_exp_month','$card_exp_year','$itemName','','$itemPrice','$currency','$paidAmount','$paidCurrency','$transactionID','$payment_status','$dt_tm','$dt_tm')";
+		$sql = "INSERT INTO `orders`(`name`,`email`,`card_number`,`card_exp_month`,`card_exp_year`,`item_name`,`item_number`,`item_price`,`item_price_currency`,`paid_amount`,`paid_amount_currency`,`txn_id`,`payment_status`,`created`,`modified`)VALUES ('$name','$email','$card_no','$card_exp_month','$card_exp_year','$itemName','','$itemPrice','$currency','$paidAmount','$paidCurrency','$transactionID','$payment_status','$dt_tm','$dt_tm')";
+		
 		mysqli_query($con, $sql) or die("Mysql Error Stripe-Charge(SQL)" . mysqli_error($con));
 
 		//Get Last Id

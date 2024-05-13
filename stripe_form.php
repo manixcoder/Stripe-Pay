@@ -1,15 +1,15 @@
-<?php 
+<?php
 include "dbcon.php";
-    if(isset($_POST['submit'])){
-        $productId = $_POST['id'];
-    } else {
-        $productId = '';
-    }
+if (isset($_POST['submit'])) {
+    $productId = $_POST['id'];
+} else {
+    $productId = '';
+}
 
-    $SQL_getPr = "SELECT * FROM `products` WHERE `id`='$productId'";
-    $res_getPr = mysqli_query($con,$SQL_getPr) or die("MySql Query Error".mysqli_error($con));
-    $row_getPr = mysqli_fetch_assoc($res_getPr);
-    $price = $row_getPr['price'];
+$SQL_getPr = "SELECT * FROM `products` WHERE `id`='$productId'";
+$res_getPr = mysqli_query($con, $SQL_getPr) or die("MySql Query Error" . mysqli_error($con));
+$row_getPr = mysqli_fetch_assoc($res_getPr);
+$price = $row_getPr['price'];
 ?>
 <html>
 
@@ -48,7 +48,7 @@ include "dbcon.php";
                         <form role="form" action="stripe_payment.php" method="POST" name="cardpayment"
                             id="payment-form">
 
-                            <input type="hidden" name="productId" value="<?php echo $productId;?>" />
+                            <input type="hidden" name="productId" value="<?php echo $productId; ?>" />
 
                             <div class="row">
                                 <div class="col-xs-12">
@@ -145,7 +145,7 @@ include "dbcon.php";
                             <div class="row">
                                 <div class="col-xs-12">
                                     <button class="subscribe btn btn-success btn-lg btn-block submit" type="submit"
-                                        id="payBtn">PAY NOW ( $<?php echo $price;?> )</button>
+                                        id="payBtn">PAY NOW ( $<?php echo $price; ?> )</button>
                                 </div>
                             </div>
                         </form>
@@ -211,77 +211,77 @@ include "dbcon.php";
 <script src="js/jquery.min.js"></script>
 
 <script>
-// Set your publishable key
-Stripe.setPublishableKey(
-    'pk_test_51PEXkeEvtyVHuMvyLnP8TtXVW5GqeCSSZoY2AO27gwTcuGLiihkvOujdcgjGzbLvriKtx8SXDSJOz1HTmqRRZi4a00SYbmicce'
-);
+    // Set your publishable key
+    Stripe.setPublishableKey(
+        'pk_test_51PEXkeEvtyVHuMvyLnP8TtXVW5GqeCSSZoY2AO27gwTcuGLiihkvOujdcgjGzbLvriKtx8SXDSJOz1HTmqRRZi4a00SYbmicce'
+    );
 
-$(function() {
-    var $form = $('#payment-form');
-    $form.submit(function(event) {
-        // Disable the submit button to prevent repeated clicks:
-        $form.find('.submit').prop('disabled', true);
-        // Request a token from Stripe:
-        Stripe.card.createToken($form, stripeResponseHandler);
-        // Prevent the form from being submitted:
-        return false;
+    $(function () {
+        var $form = $('#payment-form');
+        $form.submit(function (event) {
+            // Disable the submit button to prevent repeated clicks:
+            $form.find('.submit').prop('disabled', true);
+            // Request a token from Stripe:
+            Stripe.card.createToken($form, stripeResponseHandler);
+            // Prevent the form from being submitted:
+            return false;
+        });
     });
-});
 
-function stripeResponseHandler(status, response) {
-    // Grab the form:
-    var $form = $('#payment-form');
+    function stripeResponseHandler(status, response) {
+        // Grab the form:
+        var $form = $('#payment-form');
 
-    if (response.error) { // Problem!
-        // Show the errors on the form:
-        $form.find('.payment-status').text(response.error.message);
-        $form.find('.submit').prop('disabled', false); // Re-enable submission
-    } else { // Token was created!
-        // Get the token ID:
-        var token = response.id;
-        // Insert the token ID into the form so it gets submitted to the server:
-        $form.append($('<input type="hidden" name="stripeToken">').val(token));
-        // Submit the form:
-        $form.get(0).submit();
+        if (response.error) { // Problem!
+            // Show the errors on the form:
+            $form.find('.payment-status').text(response.error.message);
+            $form.find('.submit').prop('disabled', false); // Re-enable submission
+        } else { // Token was created!
+            // Get the token ID:
+            var token = response.id;
+            // Insert the token ID into the form so it gets submitted to the server:
+            $form.append($('<input type="hidden" name="stripeToken">').val(token));
+            // Submit the form:
+            $form.get(0).submit();
+        }
+    };
+
+    // Callback to handle the response from stripe
+    function stripeResponseHandler(status, response) {
+        if (response.error) {
+            // Enable the submit button
+            $('#payBtn').removeAttr("disabled");
+            // Display the errors on the form
+            $(".payment-status").html('<p>' + response.error.message + '</p>');
+        } else {
+            var form$ = $("#payment-form");
+            // Get token id
+            var token = response.id;
+            // Insert the token into the form
+            form$.append("<input type='hidden' name='stripeToken' value='" + token + "' />");
+            // Submit form to the server
+            form$.get(0).submit();
+        }
     }
-};
 
-// Callback to handle the response from stripe
-function stripeResponseHandler(status, response) {
-    if (response.error) {
-        // Enable the submit button
-        $('#payBtn').removeAttr("disabled");
-        // Display the errors on the form
-        $(".payment-status").html('<p>' + response.error.message + '</p>');
-    } else {
-        var form$ = $("#payment-form");
-        // Get token id
-        var token = response.id;
-        // Insert the token into the form
-        form$.append("<input type='hidden' name='stripeToken' value='" + token + "' />");
-        // Submit form to the server
-        form$.get(0).submit();
-    }
-}
+    $(document).ready(function () {
+        // On form submit
+        $("#payment-form").submit(function () {
+            // Disable the submit button to prevent repeated clicks
+            $('#payBtn').attr("disabled", "disabled");
 
-$(document).ready(function() {
-    // On form submit
-    $("#payment-form").submit(function() {
-        // Disable the submit button to prevent repeated clicks
-        $('#payBtn').attr("disabled", "disabled");
+            // Create single-use token to charge the user
+            Stripe.createToken({
+                number: $('#card_number').val(),
+                exp_month: $('#card_exp_month').val(),
+                exp_year: $('#card_exp_year').val(),
+                cvc: $('#card_cvc').val()
+            }, stripeResponseHandler);
 
-        // Create single-use token to charge the user
-        Stripe.createToken({
-            number: $('#card_number').val(),
-            exp_month: $('#card_exp_month').val(),
-            exp_year: $('#card_exp_year').val(),
-            cvc: $('#card_cvc').val()
-        }, stripeResponseHandler);
-
-        // Submit from callback
-        return false;
+            // Submit from callback
+            return false;
+        });
     });
-});
 </script>
 
 </html>
